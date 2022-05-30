@@ -1,0 +1,39 @@
+{
+  "metadata": {
+    "name": "Test Inception"
+  },
+  "resources": {
+    "files": [
+      "rxlogdata",
+      "rxlog"
+    ]
+  },
+  "jobs": {
+    "prepare": {
+      "runs-on": "inception",
+      "steps": [
+        {
+          "uses": "actions/prepare-inception@v1",
+          "with": {
+            "ranorex-report.rxlog.data": "${{ resources.files.rxlogdata }}",
+            "ranorex-report.rxlog": "${{ resources.files.rxlog }}"
+          }
+        }
+      ]
+    },
+    "ranorex": {
+      "runs-on": "inception",
+      "needs": [
+        "prepare"
+      ],
+      "generator": "tm.squashtest.org/tm.generator@v1",
+      "with": {
+        "testPlanUuid": "1eea865f-8959-475c-8c53-8ce6613b7b78",
+        "testPlanType": "Iteration",
+        "squashTMUrl": "http://127.0.0.1:8080/squash-tm/",
+        "squashTMAutomatedServerLogin": "tfserver",
+        "squashTMAutomatedServerPassword": "tfserver"
+      }
+    }
+  }
+}
